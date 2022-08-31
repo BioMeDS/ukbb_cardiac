@@ -895,8 +895,10 @@ def cine_2d_sa_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
             for k in range(1, fr + 1):
                 dof = '{0}/ffd_z{1:02d}_pair_{2:02d}_to_{3:02d}.dof.gz'.format(output_dir, z, k - 1, k)
                 dofs += dof + ' '
+            dof_int = '{0}/ffd_z{1:02d}_forward_00_to_{2:02d}_stacked.dof.gz'.format(output_dir, z, fr)
             dof_out = '{0}/ffd_z{1:02d}_forward_00_to_{2:02d}.dof.gz'.format(output_dir, z, fr)
-            os.system('mirtk compose-dofs {0} {1} -approximate'.format(dofs, dof_out))
+            os.system('mirtk compose-dofs {0} {1}'.format(dofs, dof_int))
+            os.system('mirtk convert-dof {0} {1}'.format(dof_int, dof_out))
 
         # Backward image registration
         for fr in range(T - 1, 0, -1):
@@ -917,8 +919,10 @@ def cine_2d_sa_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
                 dof = '{0}/ffd_z{1:02d}_pair_{2:02d}_to_{3:02d}.dof.gz'.format(output_dir, z,
                                                                                (k + 1) % T, k)
                 dofs += dof + ' '
+            dof_int = '{0}/ffd_z{1:02d}_backward_00_to_{2:02d}_stacked.dof.gz'.format(output_dir, z, fr)
             dof_out = '{0}/ffd_z{1:02d}_backward_00_to_{2:02d}.dof.gz'.format(output_dir, z, fr)
-            os.system('mirtk compose-dofs {0} {1} -approximate'.format(dofs, dof_out))
+            os.system('mirtk compose-dofs {0} {1}'.format(dofs, dof_int))
+            os.system('mirtk convert-dof {0} {1}'.format(dof_int, dof_out))
 
         # Average the forward and backward transformations
         os.system('mirtk init-dof {0}/ffd_z{1:02d}_forward_00_to_00.dof.gz'.format(output_dir, z))
@@ -1462,8 +1466,10 @@ def cine_2d_la_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
         for k in range(1, fr + 1):
             dof = '{0}/ffd_la_4ch_pair_{1:02d}_to_{2:02d}.dof.gz'.format(output_dir, k - 1, k)
             dofs += dof + ' '
+        dof_int = '{0}/ffd_la_4ch_forward_00_to_{1:02d}_stacked.dof.gz'.format(output_dir, fr)
         dof_out = '{0}/ffd_la_4ch_forward_00_to_{1:02d}.dof.gz'.format(output_dir, fr)
-        os.system('mirtk compose-dofs {0} {1} -approximate'.format(dofs, dof_out))
+        os.system('mirtk compose-dofs {0} {1}'.format(dofs, dof_int))
+        os.system('mirtk convert-dof {0} {1}'.format(dof_int, dof_out))
 
     # Backward image registration
     for fr in range(T - 1, 0, -1):
@@ -1483,8 +1489,10 @@ def cine_2d_la_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
         for k in range(T - 1, fr - 1, -1):
             dof = '{0}/ffd_la_4ch_pair_{1:02d}_to_{2:02d}.dof.gz'.format(output_dir, (k + 1) % T, k)
             dofs += dof + ' '
+        dof_int = '{0}/ffd_la_4ch_backward_00_to_{1:02d}_stacked.dof.gz'.format(output_dir, fr)
         dof_out = '{0}/ffd_la_4ch_backward_00_to_{1:02d}.dof.gz'.format(output_dir, fr)
-        os.system('mirtk compose-dofs {0} {1} -approximate'.format(dofs, dof_out))
+        os.system('mirtk compose-dofs {0} {1}'.format(dofs, dof_int))
+        os.system('mirtk convert-dof {0} {1}'.format(dof_int, dof_out))
 
     # Average the forward and backward transformations
     os.system('mirtk init-dof {0}/ffd_la_4ch_forward_00_to_00.dof.gz'.format(output_dir))
