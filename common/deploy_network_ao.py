@@ -50,11 +50,17 @@ tf.app.flags.DEFINE_float('weight_r', 0.1,
 
 
 if __name__ == '__main__':
+    gd = tf.MetaGraphDef()
+    with open('{0}.meta'.format(FLAGS.model_path), "rb") as f:
+        gd.ParseFromString(f.read())
+    for node in gd.graph_def.node:
+        if '_output_shapes' in node.attr:
+            del node.attr['_output_shapes']
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
         # Import the computation graph and restore the variable values
-        saver = tf.train.import_meta_graph('{0}.meta'.format(FLAGS.model_path))
+        saver = tf.train.import_meta_graph(gd)
         saver.restore(sess, '{0}'.format(FLAGS.model_path))
 
         print('Start evaluating on the test set ...')
