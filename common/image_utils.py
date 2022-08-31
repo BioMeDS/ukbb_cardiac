@@ -192,14 +192,14 @@ def distance_metric(seg_A, seg_B, dx):
         # The distance is defined only when both contours exist on this slice
         if np.sum(slice_A) > 0 and np.sum(slice_B) > 0:
             # Find contours and retrieve all the points
-            _, contours, _ = cv2.findContours(cv2.inRange(slice_A, 1, 1),
+            contours, _ = cv2.findContours(cv2.inRange(slice_A, 1, 1),
                                               cv2.RETR_EXTERNAL,
                                               cv2.CHAIN_APPROX_NONE)
             pts_A = contours[0]
             for i in range(1, len(contours)):
                 pts_A = np.vstack((pts_A, contours[i]))
 
-            _, contours, _ = cv2.findContours(cv2.inRange(slice_B, 1, 1),
+            contours, _ = cv2.findContours(cv2.inRange(slice_B, 1, 1),
                                               cv2.RETR_EXTERNAL,
                                               cv2.CHAIN_APPROX_NONE)
             pts_B = contours[0]
