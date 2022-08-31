@@ -5,8 +5,8 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 # MIRTK
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(MIRTK_SOURCE_DIR /vol/biomedic2/wbai/git/MIRTK)
-set(MIRTK_BINARY_DIR /vol/biomedic2/wbai/git/MIRTK_bin)
+set(MIRTK_SOURCE_DIR /home/markus/software/MIRTK)
+set(MIRTK_BINARY_DIR /home/markus/software/MIRTK/build)
 
 include_directories(${MIRTK_SOURCE_DIR}/Modules/Common/include)
 include_directories(${MIRTK_SOURCE_DIR}/Modules/Image/include)
