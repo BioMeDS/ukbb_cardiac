@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
             # Analyse 2 chamber view image
             nim_2ch = nib.load(seg_la_2ch_name)
-            seg_la_2ch = nim_2ch.get_data()
+            seg_la_2ch = np.asanyarray(nim_2ch.dataobj)
             T = nim_2ch.header['dim'][4]
 
             # Perform quality control for the segmentation
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
             # Analyse 4 chamber view image
             nim_4ch = nib.load(seg_la_4ch_name)
-            seg_la_4ch = nim_4ch.get_data()
+            seg_la_4ch = np.asanyarray(nim_4ch.dataobj)
 
             # Perform quality control for the segmentation
             if not atrium_pass_quality_control(seg_la_4ch, {'LA': 1, 'RA': 2}):

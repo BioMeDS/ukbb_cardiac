@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 nim = nib.load(image_name)
                 dx, dy, dz, dt = nim.header['pixdim'][1:5]
                 area_per_pixel = dx * dy
-                image = nim.get_data()
+                image = np.asanyarray(nim.dataobj)
                 X, Y, Z, T = image.shape
                 orig_image = image
 
@@ -228,7 +228,7 @@ if __name__ == '__main__':
                     nim = nib.load(image_name)
                     dx, dy, dz, dt = nim.header['pixdim'][1:5]
                     area_per_pixel = dx * dy
-                    image = nim.get_data()
+                    image = np.asanyarray(nim.dataobj)
                     X, Y = image.shape[:2]
 
                     print('  Segmenting {} frame ...'.format(fr))

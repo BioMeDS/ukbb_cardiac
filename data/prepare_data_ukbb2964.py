@@ -77,7 +77,7 @@ if __name__ == '__main__':
             label_up_name = '{0}/label_up_{1}.nii.gz'.format(data_dir, seq)
             if os.path.exists(label_name):
                 nim = nib.load(label_name)
-                label = nim.get_data()
+                label = np.asanyarray(nim.dataobj)
 
                 # Check the annotation across time frames
                 proj_t = np.sum(label, axis=(0, 1, 2))
@@ -123,10 +123,10 @@ if __name__ == '__main__':
 
                 # Save the image and label map for ED and ES frames
                 nim = nib.load(image_name)
-                vol = nim.get_data()
+                vol = np.asanyarray(nim.dataobj)
 
                 nim_up = nib.load(label_up_name)
-                label_up = nim_up.get_data()
+                label_up = np.asanyarray(nim_up.dataobj)
 
                 for k, v in fr.items():
                     nib.save(nib.Nifti1Image(vol[:, :, :, v], nim.affine),
@@ -155,7 +155,7 @@ if __name__ == '__main__':
                     break
 
                 # Check whether the image is black or not
-                image = nib.load(image_name).get_data()
+                image = np.asanyarray(nib.load(image_name).dataobj)
                 if image.max() < 1e-6:
                     flag_good = False
                     break

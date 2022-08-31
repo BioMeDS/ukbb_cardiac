@@ -76,7 +76,7 @@ def approximate_contour(contour, factor=4, smooth=0.05, periodic=False):
 def sa_pass_quality_control(seg_sa_name):
     """ Quality control for short-axis image segmentation """
     nim = nib.load(seg_sa_name)
-    seg_sa = nim.get_data()
+    seg_sa = np.asanyarray(nim.dataobj)
     X, Y, Z = seg_sa.shape[:3]
 
     # Label class in the segmentation
@@ -138,7 +138,7 @@ def sa_pass_quality_control(seg_sa_name):
 def la_pass_quality_control(seg_la_name):
     """ Quality control for long-axis image segmentation """
     nim = nib.load(seg_la_name)
-    seg = nim.get_data()
+    seg = np.asanyarray(nim.dataobj)
     X, Y, Z = seg.shape[:3]
     seg_z = seg[:, :, 0]
 
@@ -360,7 +360,7 @@ def evaluate_wall_thickness(seg_name, output_name_stem, part=None):
     nim = nib.load(seg_name)
     Z = nim.header['dim'][3]
     affine = nim.affine
-    seg = nim.get_data()
+    seg = np.asanyarray(nim.dataobj)
 
     # Label class in the segmentation
     label = {'BG': 0, 'LV': 1, 'Myo': 2, 'RV': 3}
@@ -556,7 +556,7 @@ def extract_myocardial_contour(seg_name, contour_name_stem, part=None, three_sli
     nim = nib.load(seg_name)
     X, Y, Z = nim.header['dim'][1:4]
     affine = nim.affine
-    seg = nim.get_data()
+    seg = np.asanyarray(nim.dataobj)
 
     # Label class in the segmentation
     label = {'BG': 0, 'LV': 1, 'Myo': 2, 'RV': 3}
@@ -956,8 +956,8 @@ def cine_2d_sa_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
                           '{0}/seg_sa_crop_warp_ffd_z{1:02d}_fr{2:02d}.nii.gz '
                           '-dofin {0}/ffd_z{1:02d}_00_to_{2:02d}.dof.gz '
                           '-target {0}/seg_sa_crop_z{1:02d}_fr00.nii.gz'.format(output_dir, z, fr))
-                image_A = nib.load('{0}/seg_sa_crop_z{1:02d}_fr00.nii.gz'.format(output_dir, z)).get_data()
-                image_B = nib.load('{0}/seg_sa_crop_warp_ffd_z{1:02d}_fr{2:02d}.nii.gz'.format(output_dir, z, fr)).get_data()
+                image_A = np.asanyarray(nib.load('{0}/seg_sa_crop_z{1:02d}_fr00.nii.gz'.format(output_dir, z)).dataobj)
+                image_B = np.asanyarray(nib.load('{0}/seg_sa_crop_warp_ffd_z{1:02d}_fr{2:02d}.nii.gz'.format(output_dir, z, fr)).dataobj)
                 dice_lv_myo += [[np_categorical_dice(image_A, image_B, 1),
                                  np_categorical_dice(image_A, image_B, 2)]]
                 image_names += ['{0}/seg_sa_crop_warp_ffd_z{1:02d}_fr{2:02d}.nii.gz'.format(output_dir, z, fr)]
@@ -1147,7 +1147,7 @@ def extract_la_myocardial_contour(seg_la_name, seg_sa_name, contour_name):
     nim = nib.load(seg_la_name)
     X, Y, Z = nim.header['dim'][1:4]
     affine = nim.affine
-    seg = nim.get_data()
+    seg = np.asanyarray(nim.dataobj)
 
     # Label class in the segmentation
     label = {'BG': 0, 'LV': 1, 'Myo': 2, 'RV': 3, 'LA': 4, 'RA': 5}
@@ -1155,7 +1155,7 @@ def extract_la_myocardial_contour(seg_la_name, seg_sa_name, contour_name):
     # Determine the AHA coordinate system using the mid-cavity slice of short-axis images
     nim_sa = nib.load(seg_sa_name)
     affine_sa = nim_sa.affine
-    seg_sa = nim_sa.get_data()
+    seg_sa = np.asanyarray(nim_sa.dataobj)
     aha_axis = determine_aha_coordinate_system(seg_sa, affine_sa)
 
     # Construct the points set and data arrays to represent both endo and epicardial contours
@@ -1526,8 +1526,8 @@ def cine_2d_la_motion_and_strain_analysis(data_dir, par_dir, output_dir, output_
                       '{0}/seg4_la_4ch_crop_warp_ffd_fr{1:02d}.nii.gz '
                       '-dofin {0}/ffd_la_4ch_00_to_{1:02d}.dof.gz '
                       '-target {0}/seg4_la_4ch_crop_fr00.nii.gz'.format(output_dir, fr))
-            image_A = nib.load('{0}/seg4_la_4ch_crop_fr00.nii.gz'.format(output_dir)).get_data()
-            image_B = nib.load('{0}/seg4_la_4ch_crop_warp_ffd_fr{1:02d}.nii.gz'.format(output_dir, fr)).get_data()
+            image_A = np.asanyarray(nib.load('{0}/seg4_la_4ch_crop_fr00.nii.gz'.format(output_dir)).dataobj)
+            image_B = np.asanyarray(nib.load('{0}/seg4_la_4ch_crop_warp_ffd_fr{1:02d}.nii.gz'.format(output_dir, fr)).dataobj)
             dice_lv_myo += [[np_categorical_dice(image_A, image_B, 1),
                              np_categorical_dice(image_A, image_B, 2)]]
             image_names += ['{0}/seg4_la_4ch_crop_warp_ffd_fr{1:02d}.nii.gz'.format(output_dir, fr)]

@@ -254,7 +254,7 @@ def split_sequence(image_name, output_name):
     nim = nib.load(image_name)
     T = nim.header['dim'][4]
     affine = nim.affine
-    image = nim.get_data()
+    image = np.asanyarray(nim.dataobj)
 
     for t in range(T):
         image_fr = image[:, :, :, t]
@@ -271,7 +271,7 @@ def make_sequence(image_names, dt, output_name):
     image = np.zeros((X, Y, Z, T))
 
     for t in range(T):
-        image[:, :, :, t] = nib.load(image_names[t]).get_data()
+        image[:, :, :, t] = np.asanyarray(nib.load(image_names[t]).dataobj)
 
     nim2 = nib.Nifti1Image(image, affine)
     nim2.header['pixdim'][4] = dt
@@ -283,7 +283,7 @@ def split_volume(image_name, output_name):
     nim = nib.load(image_name)
     Z = nim.header['dim'][3]
     affine = nim.affine
-    image = nim.get_data()
+    image = np.asanyarray(nim.dataobj)
 
     for z in range(Z):
         image_slice = image[:, :, z]
@@ -297,7 +297,7 @@ def split_volume(image_name, output_name):
 def image_apply_mask(input_name, output_name, mask_image, pad_value=-1):
     # Assign the background voxels (mask == 0) with pad_value
     nim = nib.load(input_name)
-    image = nim.get_data()
+    image = np.asanyarray(nim.dataobj)
     image[mask_image == 0] = pad_value
     nim2 = nib.Nifti1Image(image, nim.affine)
     nib.save(nim2, output_name)
@@ -305,8 +305,8 @@ def image_apply_mask(input_name, output_name, mask_image, pad_value=-1):
 
 def padding(input_A_name, input_B_name, output_name, value_in_B, value_output):
     nim = nib.load(input_A_name)
-    image_A = nim.get_data()
-    image_B = nib.load(input_B_name).get_data()
+    image_A = np.asanyarray(nim.dataobj)
+    image_B = np.asanyarray(nib.load(input_B_name).dataobj)
     image_A[image_B == value_in_B] = value_output
     nim2 = nib.Nifti1Image(image_A, nim.affine)
     nib.save(nim2, output_name)
@@ -314,7 +314,7 @@ def padding(input_A_name, input_B_name, output_name, value_in_B, value_output):
 
 def auto_crop_image(input_name, output_name, reserve):
     nim = nib.load(input_name)
-    image = nim.get_data()
+    image = np.asanyarray(nim.dataobj)
     X, Y, Z = image.shape[:3]
 
     # Detect the bounding box of the foreground

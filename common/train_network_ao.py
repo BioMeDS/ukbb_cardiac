@@ -113,13 +113,13 @@ def get_random_batch(filename_list, batch_size, image_size=192, time_window=1, d
             print('  Select {0} {1}'.format(image_name, label_name))
 
             # Read image and label
-            image = nib.load(image_name).get_data()
-            label = nib.load(label_name).get_data()
+            image = np.asanyarray(nib.load(image_name).dataobj)
+            label = np.asanyarray(nib.load(label_name).dataobj)
 
             # label is a temporally sparse annotation
             # label_prop has annotation across all time frames
             if label_prop_name:
-                label_prop = nib.load(label_prop_name).get_data()
+                label_prop = np.asanyarray(nib.load(label_prop_name).dataobj)
             else:
                 label_prop = None
 

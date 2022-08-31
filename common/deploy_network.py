@@ -87,7 +87,7 @@ if __name__ == '__main__':
                 # Read the image
                 print('  Reading {} ...'.format(image_name))
                 nim = nib.load(image_name)
-                image = nim.get_data()
+                image = np.asanyarray(nim.dataobj)
                 X, Y, Z, T = image.shape
                 orig_image = image
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
                     # Read the image
                     print('  Reading {} ...'.format(image_name))
                     nim = nib.load(image_name)
-                    image = nim.get_data()
+                    image = np.asanyarray(nim.dataobj)
                     X, Y = image.shape[:2]
                     if image.ndim == 2:
                         image = np.expand_dims(image, axis=2)

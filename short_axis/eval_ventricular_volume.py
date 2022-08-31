@@ -48,7 +48,7 @@ if __name__ == '__main__':
             heart_rate = 60.0 / duration_per_cycle
 
             # Segmentation
-            seg = nib.load(seg_name).get_data()
+            seg = np.asanyarray(nib.load(seg_name).dataobj)
 
             frame = {}
             frame['ED'] = 0
