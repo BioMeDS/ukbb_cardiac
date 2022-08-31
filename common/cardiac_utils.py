@@ -746,9 +746,10 @@ def extract_myocardial_contour(seg_name, contour_name_stem, part=None, three_sli
         writer = vtk.vtkPolyDataWriter()
         contour_name = '{0}{1:02d}.vtk'.format(contour_name_stem, z)
         writer.SetFileName(contour_name)
+        #If your mirtk is compiled against vtk v7 uncomment the following line (see https://github.com/baiwenjia/ukbb_cardiac/issues/12)
+        #writer.SetFileVersion(42)
         writer.SetInputData(poly)
         writer.Write()
-        os.system('sed -i "1s/4.1/4.0/" {0}'.format(contour_name))
 
 
 def evaluate_strain_by_length(contour_name_stem, T, dt, output_name_stem):
@@ -819,7 +820,6 @@ def evaluate_strain_by_length(contour_name_stem, T, dt, output_name_stem):
         writer.SetInputData(poly)
         writer.SetFileName(filename)
         writer.Write()
-        os.system('sed -i "1s/4.1/4.0/" {0}'.format(filename))
 
         # Calculate the segmental and global strains
         for i in range(0, 16):
@@ -1320,10 +1320,6 @@ def extract_la_myocardial_contour(seg_la_name, seg_sa_name, contour_name):
     writer.SetInputData(poly)
     writer.Write()
 
-    # Change vtk file version to 4.0 to avoid the warning by MIRTK, which is
-    # developed using VTK 6.3, which does not know file version 4.1.
-    os.system('sed -i "1s/4.1/4.0/" {0}'.format(contour_name))
-
 
 def evaluate_la_strain_by_length(contour_name_stem, T, dt, output_name_stem):
     """ Calculate the strain based on the line length """
@@ -1392,7 +1388,6 @@ def evaluate_la_strain_by_length(contour_name_stem, T, dt, output_name_stem):
         writer.SetInputData(poly)
         writer.SetFileName(filename)
         writer.Write()
-        os.system('sed -i "1s/4.1/4.0/" {0}'.format(filename))
 
         # Calculate the segmental and global strains
         for i in range(6):
